@@ -2,11 +2,11 @@ package com.aranteknoloji.arannews
 
 import android.os.Bundle
 import android.widget.Toast
-import com.aranteknoloji.arannews.architect.BaseActivity
-import com.aranteknoloji.arannews.architect.BaseToolbarMenuActivity
+import com.aranteknoloji.arannews.architect.BaseToolbarActivity
+import com.aranteknoloji.arannews.architect.Menus
 import com.aranteknoloji.arannews.fragments.DenmeFragment
 
-class MainActivity: BaseToolbarMenuActivity() {
+class MainActivity: BaseToolbarActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,14 +25,14 @@ class MainActivity: BaseToolbarMenuActivity() {
             Toast.makeText(this, supportFragmentManager.backStackEntryCount.toString(), Toast.LENGTH_SHORT).show()
         }
 
-        actionCreateMenu = {
-            menuInflater.inflate(R.menu.main, it)
-            true
-        }
-
-        actionSettingsItem = {
-            Toast.makeText(this, "Settings Act", Toast.LENGTH_SHORT).show()
-            true
-        }
+//        actionCreateMenu = {
+//            inflateMenu(Menus.MAIN, it)
+//            true
+//        }
+//
+//        actionSettingsItem = {
+//            Toast.makeText(this, "Settings Act", Toast.LENGTH_SHORT).show()
+//            true
+//        }
     }
 }
