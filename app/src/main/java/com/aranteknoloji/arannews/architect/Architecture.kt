@@ -19,7 +19,7 @@ import com.aranteknoloji.arannews.R
  * If you want to change the Toolbar, make sure your viewModel has AranToolbar class.
  *
  * @param classOfVM is for setting your preferred viewModel class
- * @param generic is stands for the instance of your created viewModel class
+ * @param T is stands for the instance of your created viewModel class
  *
  * @see AranToolbar */
 abstract class BaseFragment<T: BaseViewModel>(classOfVM: Class<T>): Fragment() {
@@ -47,48 +47,17 @@ abstract class BaseFragment<T: BaseViewModel>(classOfVM: Class<T>): Fragment() {
      * @param fragment the instance of the new fragment*/
     fun addFragment(fragment: Fragment) {
         activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.main_frame, fragment)?.addToBackStack(fragment.tag)?.commit()
+        activity?.let { try { (it as BaseToolbarActivity).enableHomeButton() } catch (e: TypeCastException) { e.printStackTrace() } }
     }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        (viewModel as BaseViewModel).listener = context as AranToolbar
+        viewModel.listener = context as AranToolbar
     }
 
     override fun onDetach() {
         super.onDetach()
-        (viewModel as BaseViewModel).listener = null
-    }
-}
-
-abstract class BaseActivity: AppCompatActivity() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-    }
-
-    fun swapFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.main_frame, fragment)
-            .commit()
-    }
-}
-
-abstract class BaseMenuActivity: BaseActivity() {
-
-    var actionCreateMenu: (menu: Menu?) -> Boolean = { false }
-    var actionSettingsItem: () -> Boolean = { false }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        return actionCreateMenu.invoke(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return actionSettingsItem.takeIf { item?.itemId == MenuItems.SETTINGS.id }?.invoke() ?: false
-    }
-
-    fun inflateMenu(menu: Menus, to: Menu?) {
-        menuInflater.inflate(menu.id, to)
+        viewModel.listener = null
     }
 }
 
@@ -116,9 +85,23 @@ abstract class BaseMenuFragment<T: BaseViewModel>(classOfVM: Class<T>): BaseFrag
     }
 }
 
+abstract class BaseActivity: AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+    }
+
+    fun swapFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.main_frame, fragment)
+            .commit()
+    }
+}
+
 abstract class BaseToolbarActivity: BaseActivity(), AranToolbar {
 
-    val toolbar by lazy { findViewById<Toolbar>(R.id.main_toolbar) }
+    private val toolbar by lazy { findViewById<Toolbar>(R.id.main_toolbar) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -163,11 +146,6 @@ abstract class BaseViewModel: ViewModel() {
     var optionItemSelected: (Int) -> Unit = {  }
 
     fun optionItemSelectedListener(func: (Int) -> Unit) {optionItemSelected = func}
-}
-
-enum class MenuItems(val id: Int) {
-    SETTINGS(R.id.action_settings),
-    DEFAULT(0)
 }
 
 enum class Menus(val id: Int) {
