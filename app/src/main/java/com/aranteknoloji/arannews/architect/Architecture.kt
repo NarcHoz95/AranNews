@@ -96,6 +96,10 @@ abstract class BaseToolbarMenuActivity: BaseActivity(), AranToolbar {
         return actionSettingsItem.takeIf { item?.itemId == MenuItems.SETTINGS.id }?.invoke() ?: false
     }
 
+    override fun toolbarTitleChanged(str: String) {
+        toolbar.title = str
+    }
+
     fun enableHomeButton() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }

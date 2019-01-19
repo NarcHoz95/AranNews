@@ -8,10 +8,6 @@ import com.aranteknoloji.arannews.fragments.DenmeFragment
 
 class MainActivity: BaseToolbarMenuActivity() {
 
-    override fun toolbarTitleChanged(str: String) {
-        toolbar.title = str
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
