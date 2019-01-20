@@ -117,6 +117,10 @@ abstract class BaseToolbarActivity: BaseActivity(), AranToolbar {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
+    fun disableHomeButton() {
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
+    }
+
     fun setHomeButtonAction(func: () -> Unit) {
         toolbar.setNavigationOnClickListener { func.invoke() }
     }
