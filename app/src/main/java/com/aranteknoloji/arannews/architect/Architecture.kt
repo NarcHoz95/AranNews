@@ -8,7 +8,9 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import com.aranteknoloji.arannews.R
 
 /**
@@ -17,10 +19,10 @@ import com.aranteknoloji.arannews.R
  * If you want to change the Toolbar, make sure your viewModel has AranToolbar class.
  *
  * @param classOfVM is for setting your preferred viewModel class
- * @param generic is stands for the instance of your created viewModel class
+ * @param T is stands for the instance of your created viewModel class
  *
  * @see AranToolbar */
-abstract class BaseFragment<T: ViewModel>(classOfVM: Class<T>): Fragment() {
+abstract class BaseFragment<T: BaseViewModel>(classOfVM: Class<T>): Fragment() {
 
     /**
      * It is a created ViewModel class by BaseFragment.
@@ -45,20 +47,41 @@ abstract class BaseFragment<T: ViewModel>(classOfVM: Class<T>): Fragment() {
      * @param fragment the instance of the new fragment*/
     fun addFragment(fragment: Fragment) {
         activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.main_frame, fragment)?.addToBackStack(fragment.tag)?.commit()
+        activity?.let { try { (it as BaseToolbarActivity).enableHomeButton() } catch (e: TypeCastException) { e.printStackTrace() } }
     }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        if (viewModel is BaseViewModel) {
-            (viewModel as BaseViewModel).listener = context as AranToolbar
-        }
+        viewModel.listener = context as AranToolbar
     }
 
     override fun onDetach() {
         super.onDetach()
-        if (viewModel is BaseViewModel) {
-            (viewModel as BaseViewModel).listener = null
+        viewModel.listener = null
+    }
+}
+
+abstract class BaseMenuFragment<T: BaseViewModel>(classOfVM: Class<T>): BaseFragment<T>(classOfVM) {
+
+    var menuRes: Int? = null
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        menuRes?.let {
+            inflater?.inflate(it, menu)
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        item?.let {
+            viewModel.optionItemSelected.invoke(it.itemId)
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
 
@@ -76,24 +99,14 @@ abstract class BaseActivity: AppCompatActivity() {
     }
 }
 
-abstract class BaseToolbarMenuActivity: BaseActivity(), AranToolbar {
+abstract class BaseToolbarActivity: BaseActivity(), AranToolbar {
 
-    val toolbar by lazy { findViewById<Toolbar>(R.id.main_toolbar) }
-    var actionCreateMenu: (menu: Menu?) -> Boolean = { false }
-    var actionSettingsItem: () -> Boolean = { false }
+    private val toolbar by lazy { findViewById<Toolbar>(R.id.main_toolbar) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setSupportActionBar(toolbar)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        return actionCreateMenu.invoke(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return actionSettingsItem.takeIf { item?.itemId == MenuItems.SETTINGS.id }?.invoke() ?: false
     }
 
     override fun toolbarTitleChanged(str: String) {
@@ -111,10 +124,35 @@ abstract class BaseToolbarMenuActivity: BaseActivity(), AranToolbar {
 
 abstract class BaseViewModel: ViewModel() {
 
+    /**
+     * listener is lamda function that can be invoked when toolbar title
+     * needs to be changed.
+     *
+     * @see AranToolbar*/
     var listener: AranToolbar? = null
+
+    /**
+     * If you are using BaseMenuFragment in your fragment which belongs to that viewModel,
+     * you may wanna use this listener as your action item.
+     * You will have the id of the clicked item in the menu.
+     * Finally, you need to return boolean whether to see your action is completed or not.
+     * If it is <var>true</var>, your action would be completed. If it is false, your action would not
+     * be completed.</br>
+     * We will suggest you to use Enum class in order to get action ids of the menu items.
+     *
+     * @see Enum
+     * @see BaseMenuFragment
+     * @see optionItemSelectedListener*/
+    var optionItemSelected: (Int) -> Unit = {  }
+
+    fun optionItemSelectedListener(func: (Int) -> Unit) {optionItemSelected = func}
 }
 
-enum class MenuItems(val id: Int){
+enum class Menus(val id: Int) {
+    MAIN(R.menu.main)
+}
+
+enum class MenuItemIDs(val id: Int) {
     SETTINGS(R.id.action_settings),
     DEFAULT(0)
 }
