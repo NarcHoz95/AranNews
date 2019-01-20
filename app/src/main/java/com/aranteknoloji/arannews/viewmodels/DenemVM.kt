@@ -1,8 +1,8 @@
 package com.aranteknoloji.arannews.viewmodels
 
 import android.arch.lifecycle.MutableLiveData
-import com.aranteknoloji.arannews.R
 import com.aranteknoloji.arannews.architect.BaseViewModel
+import com.aranteknoloji.arannews.architect.MenuItemIDs
 
 class DenemVM: BaseViewModel() {
 
@@ -21,9 +21,4 @@ class DenemVM: BaseViewModel() {
         data.postValue(++number)
         listener?.toolbarTitleChanged(number.toString())
     }
-}
-
-enum class MenuItemIDs(val id: Int) {
-    SETTINGS(R.id.action_settings),
-    DEFAULT(0)
 }

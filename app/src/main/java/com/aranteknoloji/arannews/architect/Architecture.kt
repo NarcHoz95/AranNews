@@ -152,6 +152,11 @@ enum class Menus(val id: Int) {
     MAIN(R.menu.main)
 }
 
+enum class MenuItemIDs(val id: Int) {
+    SETTINGS(R.id.action_settings),
+    DEFAULT(0)
+}
+
 interface AranToolbar {
 
     fun toolbarTitleChanged(str: String)
