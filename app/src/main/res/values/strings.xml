@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">AranNews</string>
     <string name="settings">Settings</string>
+
+    <!-- BottomNav strings -->
+    <string name="bottom_nav_feeds">Feeds</string>
+    <string name="bottom_nav_saved">Saved</string>
+    <string name="bottom_nav_settings">Settings</string>
 </resources>
