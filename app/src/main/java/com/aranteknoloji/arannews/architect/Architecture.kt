@@ -12,6 +12,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import com.aranteknoloji.arannews.R
+import com.aranteknoloji.arannews.providers.FragmentManagerProvider
 
 /**
  * BaseFragment extends with Fragment. Moreover, it provides viewModel and
@@ -53,11 +54,15 @@ abstract class BaseFragment<T: BaseViewModel>(classOfVM: Class<T>): Fragment() {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         viewModel.listener = context as AranToolbar
+        activity?.let {
+            viewModel.provider = FragmentManagerProvider(it)
+        }
     }
 
     override fun onDetach() {
         super.onDetach()
         viewModel.listener = null
+        viewModel.provider = null
     }
 }
 
@@ -148,6 +153,8 @@ abstract class BaseViewModel: ViewModel() {
      * @see BaseMenuFragment
      * @see optionItemSelectedListener*/
     var optionItemSelected: (Int) -> Unit = {  }
+
+    var provider: FragmentManagerProvider? = null
 
     fun optionItemSelectedListener(func: (Int) -> Unit) {optionItemSelected = func}
 }
