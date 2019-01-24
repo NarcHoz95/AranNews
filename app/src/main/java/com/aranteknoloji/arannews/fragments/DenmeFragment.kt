@@ -15,7 +15,7 @@ class DenmeFragment: BaseMenuFragment<DenemVM>(DenemVM::class.java) {
         val binding = FragmentDenmeBinding.inflate(inflater)
         binding.viewmodel = viewModel
         binding.setLifecycleOwner(this)
-        menuRes = Menus.MAIN.id
+        menuRes = Menus.MAIN
         return binding.root
     }
 }

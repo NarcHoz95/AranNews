@@ -68,6 +68,7 @@ abstract class BaseFragment<T: BaseViewModel>(classOfVM: Class<T>): Fragment() {
 
 abstract class BaseMenuFragment<T: BaseViewModel>(classOfVM: Class<T>): BaseFragment<T>(classOfVM) {
 
+    @ToolbarMenus
     var menuRes: Int? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -157,10 +158,6 @@ abstract class BaseViewModel: ViewModel() {
     var provider: FragmentManagerProvider? = null
 
     fun optionItemSelectedListener(func: (Int) -> Unit) {optionItemSelected = func}
-}
-
-enum class Menus(val id: Int) {
-    MAIN(R.menu.main)
 }
 
 enum class MenuItemIDs(val id: Int) {

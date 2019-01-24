@@ -1,13 +1,20 @@
 package com.aranteknoloji.arannews.viewmodels
 
-import android.databinding.BindingAdapter
-import android.support.annotation.NonNull
 import android.support.design.widget.BottomNavigationView
 import android.util.Log
 import android.view.MenuItem
 import com.aranteknoloji.arannews.architect.BaseViewModel
+import com.aranteknoloji.arannews.architect.CustomNavCallbacks
+import com.aranteknoloji.arannews.architect.Tabs
 
 class MainFragmentViewModel: BaseViewModel() {
+
+    val navCallbacks = object : CustomNavCallbacks {
+        override fun tabSelected(id: Int) {
+            Log.e("MainFragment", "Tab is clicked, $id")
+            Log.e("MainFragment", "Is this saved tab? ${id == Tabs.SAVED}")
+        }
+    }
 
 //    override fun onNavigationItemSelected(item: MenuItem): Boolean {
 //        Log.e("MainFragmentViewModel", "onNavigationItemSelected")

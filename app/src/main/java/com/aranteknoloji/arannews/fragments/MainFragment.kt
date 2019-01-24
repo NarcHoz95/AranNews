@@ -1,15 +1,12 @@
 package com.aranteknoloji.arannews.fragments
 
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.design.widget.BottomNavigationView
-import android.support.v4.app.Fragment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.aranteknoloji.arannews.R
-import com.aranteknoloji.arannews.architect.*
+import com.aranteknoloji.arannews.architect.BaseFragment
+import com.aranteknoloji.arannews.architect.Menus
+import com.aranteknoloji.arannews.architect.onNavigationItemSelected
 import com.aranteknoloji.arannews.databinding.FragmentMainBinding
 import com.aranteknoloji.arannews.viewmodels.MainFragmentViewModel
 
@@ -19,14 +16,7 @@ class MainFragment: BaseFragment<MainFragmentViewModel>(MainFragmentViewModel::c
         val binding = FragmentMainBinding.inflate(inflater)
         binding.viewmodel = viewModel
         binding.setLifecycleOwner(this)
-
-        onNavigationItemSelected(binding.root.findViewById(R.id.bottom_nav), object : CustomNavCallbacks{
-            override fun tabSelected(id: Int) {
-                Log.e("MainFragment", "Tab is clicked, $id")
-                Log.e("MainFragment", "Is this saved tab? ${id == SAVED}")
-            }
-        })
-
+        onNavigationItemSelected(binding.root.findViewById(Menus.BOTTOM_NAV), viewModel.navCallbacks)
         return binding.root
     }
 
