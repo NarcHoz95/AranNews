@@ -25,7 +25,7 @@
                 android:id="@+id/bottom_nav"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:onNavigationItemSelected="@{viewmodel.navCallbacks}"
+                app:onNavigationItemSelected="@{viewmodel.navItemSelected}"
                 app:menu="@menu/bottom_nav_menu"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

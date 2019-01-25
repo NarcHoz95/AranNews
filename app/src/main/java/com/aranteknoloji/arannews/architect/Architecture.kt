@@ -160,11 +160,6 @@ abstract class BaseViewModel: ViewModel() {
     fun optionItemSelectedListener(func: (Int) -> Unit) {optionItemSelected = func}
 }
 
-enum class MenuItemIDs(val id: Int) {
-    SETTINGS(R.id.action_settings),
-    DEFAULT(0)
-}
-
 interface AranToolbar {
 
     fun toolbarTitleChanged(str: String)
