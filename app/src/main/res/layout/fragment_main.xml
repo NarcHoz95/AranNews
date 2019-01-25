@@ -2,7 +2,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
-        
         <variable
                 name="viewmodel"
                 type="com.aranteknoloji.arannews.viewmodels.MainFragmentViewModel" />
@@ -12,10 +11,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <FrameLayout
-                android:id="@+id/fragment_frame"
+        <android.support.v4.view.ViewPager
+                android:id="@+id/viewpager"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:adapter="@{viewmodel.adapter}"
+                app:currentSelectedTab="@{safeUnbox(viewmodel.currentSelectedTab)}"
+                app:onFragmentChange="@{viewmodel.viewpageChange}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/bottom_nav"
@@ -26,10 +28,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:onNavigationItemSelected="@{viewmodel.navItemSelected}"
+                app:selectedTab="@{safeUnbox(viewmodel.willSelect)}"
                 app:menu="@menu/bottom_nav_menu"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>
+
 
     </android.support.constraint.ConstraintLayout>
 </layout>
