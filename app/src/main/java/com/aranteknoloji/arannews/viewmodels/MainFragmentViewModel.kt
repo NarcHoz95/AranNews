@@ -34,7 +34,7 @@ class MainFragmentViewModel: BaseViewModel() {
         }
     }
 
-    val navItemSelectedLamda: (MenuItem) -> Unit = {
+    val navItemSelected: (MenuItem) -> Unit = {
         Log.e("MainFragmentViewModel", "CLicked id is ${it.itemId}")
     }
 

@@ -5,8 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.aranteknoloji.arannews.architect.BaseFragment
-import com.aranteknoloji.arannews.architect.Menus
-import com.aranteknoloji.arannews.architect.onNavigationItemSelected
 import com.aranteknoloji.arannews.databinding.FragmentMainBinding
 import com.aranteknoloji.arannews.viewmodels.MainFragmentViewModel
 
@@ -16,7 +14,7 @@ class MainFragment: BaseFragment<MainFragmentViewModel>(MainFragmentViewModel::c
         val binding = FragmentMainBinding.inflate(inflater)
         binding.viewmodel = viewModel
         binding.setLifecycleOwner(this)
-        onNavigationItemSelected(binding.root.findViewById(Menus.BOTTOM_NAV), viewModel.navCallbacks)
+//        onNavigationItemSelected(binding.root.findViewById(Menus.BOTTOM_NAV), viewModel.navCallbacks)
         return binding.root
     }
 
