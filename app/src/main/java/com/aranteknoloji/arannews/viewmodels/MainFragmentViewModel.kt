@@ -15,6 +15,14 @@ class MainFragmentViewModel : BaseViewModel() {
     val adapter by lazy { MyPagerAdapter() }
     val currentSelectedTab by lazy { MutableLiveData<Int>() }
     val willSelect by lazy { MutableLiveData<Int>() }
+    val offset by lazy { MutableLiveData<Float>() }
+    val scrollState by lazy { MutableLiveData<Int>() }
+
+    val scrollStateChange: (Int, Float) -> Unit = {state: Int, offset: Float ->
+        scrollState.postValue(state)
+        this.offset.postValue(offset)
+    }
+
     val navItemSelected: (Int) -> Unit = {
         Log.e("MainFragmentViewModel", "CLicked id is $it")
         when (it) {
@@ -23,6 +31,7 @@ class MainFragmentViewModel : BaseViewModel() {
             Tabs.SETTINGS -> setSelectedTab(2, "Settings")
         }
     }
+
     val viewpageChange: (Int) -> Unit = {
         Log.e("MainFragmentViewModel", "Page chnaged to $it")
         when (it) {
