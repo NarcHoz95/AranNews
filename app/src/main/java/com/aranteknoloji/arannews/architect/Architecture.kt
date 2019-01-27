@@ -77,6 +77,7 @@ abstract class BaseMenuFragment<T: BaseViewModel>(classOfVM: Class<T>): BaseFrag
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        menu?.clear()
         super.onCreateOptionsMenu(menu, inflater)
         menuRes?.let {
             inflater?.inflate(it, menu)
@@ -115,8 +116,12 @@ abstract class BaseToolbarActivity: BaseActivity(), AranToolbar {
         setSupportActionBar(toolbar)
     }
 
-    override fun toolbarTitleChanged(str: String) {
+    override fun toolbarTitleChanged(@NavMenuTitle str: String) {
         toolbar.title = str
+    }
+
+    override fun toolbarHomeEnable(bool: Boolean) {
+        if (bool) enableHomeButton() else disableHomeButton()
     }
 
     fun enableHomeButton() {
@@ -128,7 +133,10 @@ abstract class BaseToolbarActivity: BaseActivity(), AranToolbar {
     }
 
     fun setHomeButtonAction(func: () -> Unit) {
-        toolbar.setNavigationOnClickListener { func.invoke() }
+        toolbar.setNavigationOnClickListener {
+            toolbar.title = Tabs.FEEDS_TITLE
+            func.invoke()
+        }
     }
 }
 
@@ -158,9 +166,16 @@ abstract class BaseViewModel: ViewModel() {
     var provider: FragmentManagerProvider? = null
 
     fun optionItemSelectedListener(func: (Int) -> Unit) {optionItemSelected = func}
+
+    fun addFragment(fragment: Fragment) {
+        provider?.fragmentManager?.beginTransaction()?.replace(R.id.main_frame, fragment)?.commit()
+        listener?.toolbarHomeEnable(true)
+    }
 }
 
 interface AranToolbar {
 
-    fun toolbarTitleChanged(str: String)
+    fun toolbarTitleChanged(@NavMenuTitle str: String)
+
+    fun toolbarHomeEnable(bool: Boolean)
 }

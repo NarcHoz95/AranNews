@@ -2,9 +2,10 @@ package com.aranteknoloji.arannews.viewmodels
 
 import android.arch.lifecycle.MutableLiveData
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.app.FragmentStatePagerAdapter
 import android.util.Log
 import com.aranteknoloji.arannews.architect.BaseViewModel
+import com.aranteknoloji.arannews.architect.NavMenuTitle
 import com.aranteknoloji.arannews.architect.Tabs
 import com.aranteknoloji.arannews.fragments.FeedsFragment
 import com.aranteknoloji.arannews.fragments.SavedFragment
@@ -26,9 +27,9 @@ class MainFragmentViewModel : BaseViewModel() {
     val navItemSelected: (Int) -> Unit = {
         Log.e("MainFragmentViewModel", "CLicked id is $it")
         when (it) {
-            Tabs.FEED -> setSelectedTab(0, "Feeds")
-            Tabs.SAVED -> setSelectedTab(1, "Saved")
-            Tabs.SETTINGS -> setSelectedTab(2, "Settings")
+            Tabs.FEED -> setSelectedTab(0, Tabs.FEEDS_TITLE)
+            Tabs.SAVED -> setSelectedTab(1, Tabs.SAVED_TITLE)
+            Tabs.SETTINGS -> setSelectedTab(2, Tabs.SETTINGS_TITLE)
         }
     }
 
@@ -41,12 +42,12 @@ class MainFragmentViewModel : BaseViewModel() {
         }
     }
 
-    private fun setSelectedTab(id: Int, str: String) {
+    private fun setSelectedTab(id: Int, @NavMenuTitle str: String) {
         currentSelectedTab.postValue(id)
         listener?.toolbarTitleChanged(str)
     }
 
-    inner class MyPagerAdapter : FragmentPagerAdapter(provider?.fragmentManager) {
+    inner class MyPagerAdapter : FragmentStatePagerAdapter(provider?.fragmentManager) {
 
         private val fragments by lazy {
             arrayListOf<Fragment>(FeedsFragment(), SavedFragment(), SettingsFragment())
