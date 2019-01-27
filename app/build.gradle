@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 27
@@ -56,10 +57,13 @@ dependencies {
     //LifeCycler
     implementation "android.arch.lifecycle:extensions:1.1.1"
     // Data binding
-    kapt "com.android.databinding:compiler:3.1.4"
+    kapt 'androidx.databinding:databinding-compiler:3.3.0'
     //Glide
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     kapt 'com.github.bumptech.glide:compiler:4.8.0'
+    //ResouceProvider from Comcast
+//    kapt 'com.xfinity:resourceprovider-compiler:1.0'
+//    implementation 'com.xfinity:resourceprovider-library:1.0'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

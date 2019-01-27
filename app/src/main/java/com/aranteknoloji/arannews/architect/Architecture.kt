@@ -12,6 +12,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import com.aranteknoloji.arannews.R
+import com.aranteknoloji.arannews.providers.FragmentManagerProvider
 
 /**
  * BaseFragment extends with Fragment. Moreover, it provides viewModel and
@@ -53,16 +54,21 @@ abstract class BaseFragment<T: BaseViewModel>(classOfVM: Class<T>): Fragment() {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         viewModel.listener = context as AranToolbar
+        activity?.let {
+            viewModel.provider = FragmentManagerProvider(it)
+        }
     }
 
     override fun onDetach() {
         super.onDetach()
         viewModel.listener = null
+        viewModel.provider = null
     }
 }
 
 abstract class BaseMenuFragment<T: BaseViewModel>(classOfVM: Class<T>): BaseFragment<T>(classOfVM) {
 
+    @ToolbarMenus
     var menuRes: Int? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -71,6 +77,7 @@ abstract class BaseMenuFragment<T: BaseViewModel>(classOfVM: Class<T>): BaseFrag
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        menu?.clear()
         super.onCreateOptionsMenu(menu, inflater)
         menuRes?.let {
             inflater?.inflate(it, menu)
@@ -109,16 +116,27 @@ abstract class BaseToolbarActivity: BaseActivity(), AranToolbar {
         setSupportActionBar(toolbar)
     }
 
-    override fun toolbarTitleChanged(str: String) {
+    override fun toolbarTitleChanged(@NavMenuTitle str: String) {
         toolbar.title = str
+    }
+
+    override fun toolbarHomeEnable(bool: Boolean) {
+        if (bool) enableHomeButton() else disableHomeButton()
     }
 
     fun enableHomeButton() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
+    fun disableHomeButton() {
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
+    }
+
     fun setHomeButtonAction(func: () -> Unit) {
-        toolbar.setNavigationOnClickListener { func.invoke() }
+        toolbar.setNavigationOnClickListener {
+            toolbar.title = Tabs.FEEDS_TITLE
+            func.invoke()
+        }
     }
 }
 
@@ -145,19 +163,19 @@ abstract class BaseViewModel: ViewModel() {
      * @see optionItemSelectedListener*/
     var optionItemSelected: (Int) -> Unit = {  }
 
+    var provider: FragmentManagerProvider? = null
+
     fun optionItemSelectedListener(func: (Int) -> Unit) {optionItemSelected = func}
-}
 
-enum class Menus(val id: Int) {
-    MAIN(R.menu.main)
-}
-
-enum class MenuItemIDs(val id: Int) {
-    SETTINGS(R.id.action_settings),
-    DEFAULT(0)
+    fun addFragment(fragment: Fragment) {
+        provider?.fragmentManager?.beginTransaction()?.replace(R.id.main_frame, fragment)?.commit()
+        listener?.toolbarHomeEnable(true)
+    }
 }
 
 interface AranToolbar {
 
-    fun toolbarTitleChanged(str: String)
+    fun toolbarTitleChanged(@NavMenuTitle str: String)
+
+    fun toolbarHomeEnable(bool: Boolean)
 }
