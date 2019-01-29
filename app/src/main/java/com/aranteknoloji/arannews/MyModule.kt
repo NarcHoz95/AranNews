@@ -1,11 +1,13 @@
 package com.aranteknoloji.arannews
 
+import android.support.v4.app.FragmentActivity
+import com.aranteknoloji.arannews.providers.NavigationProvider
 import dagger.Module
-import dagger.android.ContributesAndroidInjector
+import dagger.Provides
 
 @Module
-abstract class MyModule {
+class MyModule(val fragmentActivity: FragmentActivity) {
 
-    @ContributesAndroidInjector
-    abstract fun contributesAndroidInjector(): MainActivity
+    @Provides
+    fun providesNavigationProvider() = NavigationProvider(fragmentActivity.supportFragmentManager)
 }

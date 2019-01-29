@@ -11,9 +11,13 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import com.aranteknoloji.arannews.DaggerMyComponent
+import com.aranteknoloji.arannews.MyModule
 import com.aranteknoloji.arannews.R
 import com.aranteknoloji.arannews.providers.FragmentManagerProvider
+import com.aranteknoloji.arannews.providers.NavigationProvider
 import dagger.android.AndroidInjection
+import javax.inject.Inject
 
 /**
  * BaseFragment extends with Fragment. Moreover, it provides viewModel and
@@ -95,10 +99,16 @@ abstract class BaseMenuFragment<T: BaseViewModel>(classOfVM: Class<T>): BaseFrag
 
 abstract class BaseActivity: AppCompatActivity() {
 
+    @Inject lateinit var navigationProvider: NavigationProvider
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val component = DaggerMyComponent.builder()
+            .myModule(MyModule(this))
+            .build()
+        component.inject(this)
     }
 
     fun swapFragment(fragment: Fragment) {

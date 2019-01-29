@@ -9,19 +9,17 @@ import javax.inject.Inject
 
 class MainActivity: BaseToolbarActivity() {
 
-    @Inject lateinit var navigationProvider: NavigationProvider
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         if (savedInstanceState == null) {
-            swapFragment(MainFragment())
+            navigationProvider.swapFragment(MainFragment())
         }
 
         setHomeButtonAction {
             if (supportFragmentManager.backStackEntryCount > 0) supportFragmentManager.popBackStack()
             if (supportFragmentManager.backStackEntryCount == 0) {
-                swapFragment(MainFragment())
+//                swapFragment(MainFragment())
                 navigationProvider.swapFragment(MainFragment())
                 disableHomeButton()
             }

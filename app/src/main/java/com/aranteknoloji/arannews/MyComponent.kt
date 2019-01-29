@@ -1,8 +1,10 @@
 package com.aranteknoloji.arannews
 
+import com.aranteknoloji.arannews.architect.BaseActivity
 import dagger.Component
-import dagger.android.AndroidInjectionModule
-import dagger.android.AndroidInjector
 
-@Component(modules = [AndroidInjectionModule::class, MyModule::class])
-interface MyComponent: AndroidInjector<MyApplication>
+@Component(modules = [MyModule::class])
+interface MyComponent {
+
+    fun inject(activiy: BaseActivity)
+}
