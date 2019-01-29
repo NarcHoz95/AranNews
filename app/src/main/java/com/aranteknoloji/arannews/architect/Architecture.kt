@@ -13,6 +13,7 @@ import android.view.MenuItem
 import android.view.View
 import com.aranteknoloji.arannews.R
 import com.aranteknoloji.arannews.providers.FragmentManagerProvider
+import dagger.android.AndroidInjection
 
 /**
  * BaseFragment extends with Fragment. Moreover, it provides viewModel and
@@ -95,6 +96,7 @@ abstract class BaseMenuFragment<T: BaseViewModel>(classOfVM: Class<T>): BaseFrag
 abstract class BaseActivity: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     }
